@@ -1,0 +1,8 @@
+{
+  "type": "mongodb",
+  "host": "<user>:<password>@ds261118.mlab.com",
+  "port": 61118,
+  "database": "<database>",
+  "entities": ["src/**/**.entity{.ts,.js}"],
+  "synchronize": true
+}
