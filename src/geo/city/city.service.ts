@@ -7,9 +7,10 @@ var inside = require('point-in-polygon');
 
 var data = '';
 var readStream = fs.createReadStream('../qabackend/src/files/countries.json', 'utf8');
+
+
 @Injectable()
 export class CityService {
-    private country: Promise;
 
     public async getCity(coordinates: Coor): Promise< any | { status: number }>{
         return this.findCountry(coordinates).then((data)=> {
@@ -21,25 +22,28 @@ export class CityService {
     public async findCountry(coordinates: Coor): Promise< any | { status: number }>{
 
 
-        var inside_polygon_flag = false;
+        let inside_polygon_flag = false;
         console.log(coordinates);
-        var lat = coordinates.lat;
-        var lng = coordinates.lng;
-        fs.readFile('../qabackend/src/files/countries.json', (err, data) => {
-            if (err)
-                console.log(err);
-            else {
-                var json = JSON.parse(data);
+        let lat = coordinates.lat;
+        let lng = coordinates.lng;
+    let country: String;
+    let citiesArray:any = [];
+        var data = fs.readFileSync('../qabackend/src/files/countries.json');
+        var cities = fs.readFileSync('../qabackend/src/files/majorCities.json');
+
+                let json = JSON.parse(data);
+                let citiesJson = JSON.parse(cities);
+
                 //your code using json object
-                for(var number in json.features){
+                for(let number in json.features){
                     //coordinates for polygon of each country
 
                     if(json.features[number].geometry.coordinates.length>1){
 
-                        for(var poligon_part in json.features[number].geometry.coordinates){
+                        for(let poligon_part in json.features[number].geometry.coordinates){
 
                             //console.log(json.features[number].geometry.coordinates[0][poligon_part]);
-                            var multi_polygon_coordinates = json.features[number].geometry.coordinates[poligon_part][0];
+                            let multi_polygon_coordinates = json.features[number].geometry.coordinates[poligon_part][0];
                            // console.log(polygon_coordinates);
                             inside_polygon_flag = inside([ lng,lat ], multi_polygon_coordinates);
                             if(inside_polygon_flag == true){
@@ -48,7 +52,7 @@ export class CityService {
                         }
                     }
                     else{
-                        var polygon_coordinates = json.features[number].geometry.coordinates[0];
+                        let polygon_coordinates = json.features[number].geometry.coordinates[0];
                         inside_polygon_flag = inside([ lng,lat ], polygon_coordinates);
                         //console.log(polygon_coordinates);
                     }
@@ -59,20 +63,24 @@ export class CityService {
 
 
                     if(inside_polygon_flag == true){
-                        this.country = json.features[number].properties.ADMIN;
+                        country = json.features[number].properties.ISO_A3;
+                        console.log(country);
+                        for(let citiesIndex in citiesJson){
+                            if(citiesJson[citiesIndex].iso3==country){
 
+                                citiesArray.push(citiesJson[citiesIndex]);
+                            }
+                        }
+
+                        return citiesArray;
                         break;
                     }
 
                     }
 
-                }
 
-        })
-        return this.country;
+
     }
-
-
 
 }
 

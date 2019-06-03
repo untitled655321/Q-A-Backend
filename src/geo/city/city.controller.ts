@@ -11,7 +11,7 @@ export class CityController {
     @Post('country')
     async getCity(@Body() coordinates: Coor): Promise<any> {
         console.log(coordinates);
-        return this.cityService.findCountry(coordinates);
+        return this.cityService.getCity(coordinates);
     }
 
 }
