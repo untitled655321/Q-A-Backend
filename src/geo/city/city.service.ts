@@ -6,7 +6,7 @@ var fs = require('fs');
 var inside = require('point-in-polygon');
 
 var data = '';
-var readStream = fs.createReadStream('../qabackend/src/files/countries.json', 'utf8');
+var readStream = fs.createReadStream('../Q-A-Backend/src/files/countries.json', 'utf8');
 
 
 @Injectable()
@@ -28,8 +28,8 @@ export class CityService {
         let lng = coordinates.lng;
     let country: String;
     let citiesArray:any = [];
-        var data = fs.readFileSync('../qabackend/src/files/countries.json');
-        var cities = fs.readFileSync('../qabackend/src/files/majorCities.json');
+        var data = fs.readFileSync('../Q-A-Backend/src/files/countries.json');
+        var cities = fs.readFileSync('../Q-A-Backend/src/files/majorCities.json');
 
                 let json = JSON.parse(data);
                 let citiesJson = JSON.parse(cities);
